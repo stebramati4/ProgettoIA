@@ -1,0 +1,37 @@
+Per rappresentare il labirinto utilizzeremo una matrice NxN nella quale ogni
+cella ha delle particolari caratteristiche descritte in seguito.
+
+All'interno del gioco interagiscono due personaggi:
+- il mago, che è il protagonista, deve trovare una delle due vie d'uscita dal labirinto
+per scappare dal mostro
+- l'Invurgus, il mostro cattivo, insegue il mago per rubargli la barba
+
+Sul loro percorso possono trovare alcuni ostacoli che intralceranno il loro percorso:
+- i pozzi senza fondo, che l'Invurgus non può sorpassare e che il mago può superare volando
+- colate di lava, che sia l'Invurgus sia il mago non sono capaci di attraversare
+
+Sparsi per il labirinto i due personaggi potranno trovare dei funghi magici:
+- se vengono raccolti dal mago gli conferiranno la capacità di volare per due volte sopra i
+pozzi senza fondo
+- al passaggio dell'Invurgus, invece, questi funghi magici diverranno inutilizzabili
+
+
+
+Per rappresentare le dinamiche sopra descritte, utilizzeremo le seguenti modalità:
+il labirinto è rappresentato come una matrice NxN, le celle al suo interno assumeranno una lettera
+in base all'oggetto presente.
+
+I personaggi saranno raffigurati con le lettere:
+- M, il mago
+- I, l'Invurgus
+
+Le celle del labirinto le rappresenteremo come:
+- P, i pozzi senza fondo
+- L, le colate di lava
+- F, i funghi magici
+- V, il cammino sicuro per i personaggi
+- S, il punto iniziale dal quale parte il Mago
+- G1 e G2, le uscite dal labirinto
+
+I personaggi potranno muoversi all'interno del labirinto secondo le 4 direzioni geografiche (NSOE).
+Il mago

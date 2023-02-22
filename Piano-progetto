@@ -34,4 +34,6 @@ Le celle del labirinto le rappresenteremo come:
 - G1 e G2, le uscite dal labirinto
 
 I personaggi potranno muoversi all'interno del labirinto secondo le 4 direzioni geografiche (NSOE).
-Il mago
+Il mago sceglierà la direzione migliore da seguire in base a due algoritmi, mentre l'Invurgus cercherà
+di diminuire la distanza che lo separa dal Mago.
+Se la direzione scelta dai personaggi non è percorribile, allora sceglieranno quella successiva in senso antiorario.

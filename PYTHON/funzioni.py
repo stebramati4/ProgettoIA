@@ -44,10 +44,10 @@ def manhattan(NP):
 
 
 #restituisce l'indice y della prima riga, corrispondente alla posizione del goal
-def trovaGoal (matrix, goal):
-    n = len(matrix[0])
+def trovaGoal (NP, goal):
+    n = len(NP[0])
 
-    firstRow = matrix[0]
+    firstRow = NP[0]
 
     for i in range(n):
         if firstRow[i] == goal:
@@ -55,6 +55,30 @@ def trovaGoal (matrix, goal):
 
     return cella
 
+
+
+# trova Mago nel labirinto, restituisce coordinate
+def trovaMago(NP):
+    n = len(NP[0])
+
+    for i in range(NP.shape[0]):
+        for j in range(NP.shape[1]):
+            if NP[i][j] == "M":
+                cella = i, j
+
+    return cella
+
+
+# trova Invurgus nel labirinto, restituisce coordinate
+def trovaInvurgus(NP):
+    n = len(NP[0])
+
+    for i in range(NP.shape[0]):
+        for j in range(NP.shape[1]):
+            if NP[i][j] == "I":
+                cella = i, j
+
+    return cella
 
 #ritorna la distanza minima
 def distanzaGoalPiùVicino(G1, G2, x, y):

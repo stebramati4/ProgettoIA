@@ -1,4 +1,6 @@
+import numpy as np
 import random
+import funzioni as f
 
 n = 5
 matrix = []
@@ -10,7 +12,7 @@ for i in range(n):
         scelteR1 = ["G1", "G2"] + ["V"] * (n - 2)
         random.shuffle(scelteR1)
         row = scelteR1
-    if i == n - 1:
+    if i == n-1:
         scelteRUltimo = ["M"] + ["V"] * (n - 1)
         random.shuffle(scelteRUltimo)
         row = scelteRUltimo
@@ -25,6 +27,7 @@ for i in range(1, n-1):
     matrix[i] = scelteCorpo[:5]
     scelteCorpo = scelteCorpo[5:]
 
-# stampa la matrice
-for row in matrix:
-    print(row)
+f.stampaMatrice(matrix)
+NP = np.array(matrix)
+
+f.manhattan(NP)

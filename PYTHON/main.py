@@ -1,6 +1,6 @@
 import numpy as np
 import funzioni as f
-
+import greedySearch as gs
 
 # PREDISPOSIZIONE INIZIALE
 
@@ -27,11 +27,13 @@ print(posInv)
 
 
 #############
-percorso = np.array([])
-d = np.array([(1, 2)])
-if len(percorso) == 0:
-    percorso = dir
-else:
-    percorso = np.concatenate(percorso, d)
-print(percorso)
+#percorso = np.array([])
+#d = np.array([(1, 2)])
+#if len(percorso) == 0:
+    #percorso = dir
+#else:
+    #percorso = np.concatenate(percorso, d)
+#print(percorso)
 ##############
+
+print(gs.controlloCella(manhattan, 4, 4))

@@ -47,19 +47,23 @@ def spostamentoMigliore(NP, manhattan, daCella):
 
     if controlloCella(manhattan, icella - 1, jcella):
         #NORD
-        heuristicN = manhattan[icella-1, jcella]
+        valoreCellaN = manhattan[icella-1, jcella]
+        heuristicN = int(valoreCellaN.item())               #converto numpy.str_ in intero
 
     if controlloCella(manhattan, icella, jcella - 1):
         #OVEST
-        heuristicO = manhattan[icella, jcella - 1]
+        valoreCellaO = manhattan[icella, jcella - 1]
+        heuristicO = int(valoreCellaO.item())
 
     if controlloCella(manhattan, icella + 1, jcella):
         #SUD
-        heuristicS = manhattan[icella + 1, jcella]
+        valoreCellaS = manhattan[icella + 1, jcella]
+        heuristicS = int(valoreCellaS.item())
 
     if controlloCella(manhattan, icella, jcella + 1):
         #EST
-        heuristicE = manhattan[icella, jcella + 1]
+        valoreCellaE = manhattan[icella, jcella + 1]
+        heuristicE = int(valoreCellaE.item())
 
     NotaIniziale = ""
     # listaPesi ha elementi del tipo (euristica, (coordinate))
@@ -69,6 +73,8 @@ def spostamentoMigliore(NP, manhattan, daCella):
                  (heuristicE, (icella, jcella + 1), NotaIniziale)]
 
     sorted_list = sorted(listaPesi, key=lambda x: x[0])
+
+    print(sorted_list)
 
     ##################################
     coordinateSpostamento = sceltaSpostamento(NP, manhattan, listaPesi)

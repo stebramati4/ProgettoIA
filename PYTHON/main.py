@@ -45,4 +45,6 @@ while not catturato:
     NP = i.mossaInvurgus(NP)
     f.stampaMatrice(NP)
     print()
+    if f.trovaMago(NP) == False:
+        catturato = True
 #gs.greedySearch(NP, manhattan)

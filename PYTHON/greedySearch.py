@@ -10,7 +10,7 @@ def greedySearch(NP, manhattan):
     # bool per goal raggiunto
     finito = False
     daCella = f.trovaMago(NP)
-    percorso = []
+    percorso = [daCella]
     while finito == False:
 
         # ripete spostamentoMigliore, mossa e inserimento delle coordinate
@@ -18,26 +18,23 @@ def greedySearch(NP, manhattan):
 
         aCella, Nota = spostamentoMigliore(NP, manhattan, daCella)
         percorso.append(aCella)
-        NP, finito, NotaFinale = mossa(NP,daCella, aCella, Nota)
+        ret = mossa(NP,daCella, aCella, Nota)
+        ############################################
+        f.stampaMatrice(NP)
+        print()
+        f.stampaMatrice(manhattan)
+        ############################################
+        NP = ret[0]
+        finito = ret[1]
+        NotaFinale = ret[2]
+        daCella = f.trovaMago(NP)
 
     print(NotaFinale)
     print(percorso)
 
 
-
-        #posMago = f.trovaMago(NP)
-        ######################################### da sistemare il percorso, utilizziamo le stampe per ora
-        #dir = np.array(spostamentoMigliore(manhattan, posMago))
-        #if len(percorso) == 0:
-            #percorso = dir
-        #else:
-            #ercorso = np.concatenate(percorso, dir)
-
-def stampaPercorso(percorso):
-    for item in percorso:
-        print(item)
-
-
+def mossaInvurgus():
+    #
 
 # effettua la mossa e aggiorna il labirinto secondo la Nota riportata
 # daCella e aCella sono le coordinate di due celle, da dove a dove salta il Mago
@@ -55,6 +52,8 @@ def mossa(NP, daCella, aCella, Nota):
         elif Nota == "UsaPrendiFungo":
             conteggioFunghi = conteggioFunghi -1 +2
         NP[aCella[0]][aCella[1]] = 'M'
+
+
         if Nota == 'G':
             return NP, True, "Hai Vinto! Hai raggiunto l'uscita più vicina"
         elif Nota == 'I':
@@ -72,40 +71,32 @@ def spostamentoMigliore(NP, manhattan, daCella):
     icella = daCella[0]
     jcella = daCella[1]
 
-    heuristicN = 1000
-    heuristicO = 1000
-    heuristicS = 1000
-    heuristicE = 1000
-
-    minimo = 0
     listaPesi = []
+    NotaIniziale = ""
 
     if controlloCella(manhattan, icella - 1, jcella):
         #NORD
         valoreCellaN = manhattan[icella-1, jcella]
         heuristicN = int(valoreCellaN.item())               #converto numpy.str_ in intero
+        listaPesi.append((heuristicN, (icella-1, jcella), NotaIniziale))
 
     if controlloCella(manhattan, icella, jcella - 1):
         #OVEST
         valoreCellaO = manhattan[icella, jcella - 1]
         heuristicO = int(valoreCellaO.item())
+        listaPesi.append((heuristicO, (icella, jcella - 1), NotaIniziale))
 
     if controlloCella(manhattan, icella + 1, jcella):
         #SUD
         valoreCellaS = manhattan[icella + 1, jcella]
         heuristicS = int(valoreCellaS.item())
+        listaPesi.append((heuristicS, (icella + 1, jcella), NotaIniziale))
 
     if controlloCella(manhattan, icella, jcella + 1):
         #EST
         valoreCellaE = manhattan[icella, jcella + 1]
         heuristicE = int(valoreCellaE.item())
-
-    NotaIniziale = ""
-    # listaPesi ha elementi del tipo (euristica, (coordinate))
-    listaPesi = [(heuristicN, (icella - 1, jcella), NotaIniziale),
-                 (heuristicO, (icella, jcella - 1), NotaIniziale),
-                 (heuristicS, (icella + 1, jcella), NotaIniziale),
-                 (heuristicE, (icella, jcella + 1), NotaIniziale)]
+        listaPesi.append((heuristicE, (icella, jcella + 1), NotaIniziale))
 
     sorted_list = sorted(listaPesi, key=lambda x: x[0])
     print(sorted_list)
@@ -140,6 +131,7 @@ def sceltaSpostamento(NP, manhattan, daCella, listaOrd):
 # Note possibili: L, I, V, G, P, PrendiFungo, UsaFungo, UsaPrendiFungo
 def controlloOstacolo(NP, manhattan, aCella, daCella):
     global conteggioFunghi
+    print(aCella)
     ostacolo = NP[aCella[0], aCella[1]]
     if ostacolo == 'L':
         return (1000, "L")
@@ -170,14 +162,15 @@ def controlloOstacolo(NP, manhattan, aCella, daCella):
                         return (int(heurCellaAtterraggio), "UsaPrendiFungo")
                     return (int(heurCellaAtterraggio), "UsaFungo")
         return (1000, "P")
+    return (1000, "Boh")
+
 
 
 # controlla se le coordinate sono all'interno del labirinto
 # icella e jcella = coordinate cella
 # RESTITUISCE: True/False
 def controlloCella(manhattan, icella, jcella):
-    n = len(manhattan)
-    print(n)
+    n = len(manhattan[0])
     if icella >= 0 and icella < n:
         if jcella >= 0 and jcella < n:
             return True

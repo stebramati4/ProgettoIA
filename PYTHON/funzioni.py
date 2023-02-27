@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import greedySearch as gs
 
 #crea il labirinto nella situazione iniziale
 # n = numero righe/colonne della matrice quadrata
@@ -67,13 +68,16 @@ def trovayGoal (NP, goal):
 # RESTITUISCE: (x, y)
 def trovaMago(NP):
     n = len(NP[0])
-
+    cella = (-1, -1)
     for i in range(NP.shape[0]):
         for j in range(NP.shape[1]):
             if NP[i][j] == "M":
                 cella = (i, j)
 
-    return cella
+    if gs.controlloCella(NP, cella[0], cella[1]):
+        return cella
+    else:
+        print("Il mago non c'è")
 
 
 # trova Invurgus nel labirinto, restituisce coordinate

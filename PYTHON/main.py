@@ -1,6 +1,7 @@
 import numpy as np
 import funzioni as f
 import greedySearch as gs
+import invurgus as i
 
 # PREDISPOSIZIONE INIZIALE
 
@@ -39,5 +40,9 @@ print(posInv)
 print(gs.controlloCella(manhattan, 4, 4))
 
 print(gs.spostamentoMigliore(NP, manhattan, posMago))
-
-gs.greedySearch(NP, manhattan)
+catturato = False
+while not catturato:
+    NP = i.mossaInvurgus(NP)
+    f.stampaMatrice(NP)
+    print()
+#gs.greedySearch(NP, manhattan)

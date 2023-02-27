@@ -1,4 +1,3 @@
-import numpy as np
 import funzioni as f
 
 # variabile globale per definire quanti il numero di salti sui pozzi senza fondo
@@ -18,6 +17,8 @@ def greedySearch(NP, manhattan):
 
         aCella, Nota = spostamentoMigliore(NP, manhattan, daCella)
         percorso.append(aCella)
+        heur = manhattan[daCella[0]][daCella[1]]
+        manhattan[daCella[0]][daCella[1]] = int(heur) + 1
         ret = mossa(NP,daCella, aCella, Nota)
         ############################################
         f.stampaMatrice(NP)
@@ -33,8 +34,6 @@ def greedySearch(NP, manhattan):
     print(percorso)
 
 
-def mossaInvurgus():
-    #
 
 # effettua la mossa e aggiorna il labirinto secondo la Nota riportata
 # daCella e aCella sono le coordinate di due celle, da dove a dove salta il Mago
@@ -169,8 +168,8 @@ def controlloOstacolo(NP, manhattan, aCella, daCella):
 # controlla se le coordinate sono all'interno del labirinto
 # icella e jcella = coordinate cella
 # RESTITUISCE: True/False
-def controlloCella(manhattan, icella, jcella):
-    n = len(manhattan[0])
+def controlloCella(NP, icella, jcella):
+    n = len(NP[0])
     if icella >= 0 and icella < n:
         if jcella >= 0 and jcella < n:
             return True

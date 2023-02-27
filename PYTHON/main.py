@@ -39,3 +39,5 @@ print(posInv)
 print(gs.controlloCella(manhattan, 4, 4))
 
 print(gs.spostamentoMigliore(NP, manhattan, posMago))
+
+gs.greedySearch(NP, manhattan)

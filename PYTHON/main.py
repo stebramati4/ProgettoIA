@@ -1,12 +1,11 @@
 import numpy as np
 import funzioni as f
 import greedySearch as gs
-import invurgus as i
 
 # PREDISPOSIZIONE INIZIALE
 
 # definizione dimensione labirinto
-n = 5
+n = 7
 
 # predisposizione del labirinto
 matrix = f.creaLabirinto(n)

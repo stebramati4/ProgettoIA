@@ -28,8 +28,8 @@ def creaLabirinto(n):
 
     # popola il corpo della matrice con Invurgus, Ostacoli e Funghi
     for i in range(1, n - 1):
-        matrix[i] = scelteCorpo[:5]
-        scelteCorpo = scelteCorpo[5:]
+        matrix[i] = scelteCorpo[:n]
+        scelteCorpo = scelteCorpo[n:]
 
     return matrix
 

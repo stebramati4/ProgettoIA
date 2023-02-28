@@ -7,10 +7,10 @@ InvPrecedente = 'V'
 
 # effettua la mossa dell'Invurgus in base alla distanza più piccola dal mago
 # oppure in base alla cella in senso antiorario
-# RESTITUISCE: NP
 def mossaInvurgus(NP):
     global InvPrecedente
 
+    catturato = False
     daCella = f.trovaInvurgus(NP)
     spostamento = spostamentoMiglioreInv(NP, daCella)
     aCella = spostamento[0]
@@ -26,10 +26,10 @@ def mossaInvurgus(NP):
     elif Nota == 'M':
         InvPrecedente = 'M'
         print("L'Invurgus ha catturato il mago!")
+        catturato = True
     else:
         InvPrecedente = Nota
-
-    return NP
+    return catturato
 
 
 # coordinate spostamento migliore

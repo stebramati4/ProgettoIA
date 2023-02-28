@@ -1,40 +1,61 @@
 import funzioni as f
+import invurgus as i
 
 # variabile globale per definire quanti il numero di salti sui pozzi senza fondo
 conteggioFunghi = 0
 
-
+# RESTITUISCE: lista (percorso)
 def greedySearch(NP, manhattan):
     # trovare percorso greedy per arrivare al goal più vicino
 
     # bool per goal raggiunto
     finito = False
+    catturato = False
     daCella = f.trovaMago(NP)
     percorso = [daCella]
     NotaFinale = ""
-    while not finito:
+    while not finito and not catturato:
+        infoMago = spostoMago(NP, manhattan, daCella, percorso)
+        daCella = infoMago[0]
+        percorso = infoMago[1]
+        finito = infoMago[2]
 
-        # ripete spostamentoMigliore, mossa e inserimento delle coordinate
-        # in array "percorso" finchè non arriva al goal
-
-        aCella, Nota = spostamentoMigliore(NP, manhattan, daCella)
-        percorso.append(aCella)
-        heur = manhattan[daCella[0]][daCella[1]]
-        manhattan[daCella[0]][daCella[1]] = int(heur) + 1
-        ret = mossa(NP, daCella, aCella, Nota)
+        catturato = i.mossaInvurgus(NP)
         ############################################
         f.stampaMatrice(NP)
         print()
         f.stampaMatrice(manhattan)
         ############################################
-        NP = ret[0]
-        finito = ret[1]
-        NotaFinale = ret[2]
-        daCella = f.trovaMago(NP)
 
+    if finito:
+        print("Il Mago ha raggiunto l'uscita!")
+    elif catturato:
+        print("L'Invurgus ha catturato il Mago!")
     print(NotaFinale)
     print(percorso)
+    return percorso
 
+# spostamento integrale del mago
+#RESTITUISCE: (x, y) (daCella), array (percorso), bool(finito)
+def spostoMago(NP, manhattan, daCella, percorso):
+    # ripete spostamentoMigliore, mossa e inserimento delle coordinate
+    # in array "percorso" finchè non arriva al goal
+
+    aCella, Nota = spostamentoMigliore(NP, manhattan, daCella)
+    percorso.append(aCella)
+    heur = manhattan[daCella[0]][daCella[1]]
+    manhattan[daCella[0]][daCella[1]] = int(heur) + 1
+
+    ret = mossa(NP, daCella, aCella, Nota)
+
+    NP = ret[0]
+    if NP[aCella[0]][aCella[1]] == "G1" or NP[aCella[0]][aCella[1]] == "G2":
+        finito = True
+    else:
+        finito = ret[1]
+    NotaFinale = ret[2]
+    daCella = f.trovaMago(NP)
+    return daCella, percorso, finito
 
 # effettua la mossa e aggiorna il labirinto secondo la Nota riportata
 # daCella e aCella sono le coordinate di due celle, da dove a dove salta il Mago
@@ -110,8 +131,13 @@ def sceltaSpostamento(NP, manhattan, daCella, listaOrd):
 
     if listaOrd[0][2] == "":
         valore = controlloOstacolo(NP, manhattan, listaOrd[0][1], daCella)
-        cellaPrimoElemento = listaOrd.pop(0)[1]         # coordinate cella
         heur = valore[0]
+        nota = valore[1]
+        if nota == "UsaFungo" or nota == "UsaPrendiFungo":
+            cellaPrimoElemento = valore[2]
+        else:
+            cellaPrimoElemento = listaOrd.pop(0)[1]  # coordinate cella
+
         nuovoElemento = (int(heur), cellaPrimoElemento, valore[1])
         listaOrd.append(nuovoElemento)
         lista = sorted(listaOrd, key=lambda x: x[0])
@@ -130,21 +156,21 @@ def controlloOstacolo(NP, manhattan, aCella, daCella):
     print(aCella)
     ostacolo = NP[aCella[0], aCella[1]]
     if ostacolo == 'L':
-        return 1000, "L"
+        return 1000, "L", ()
 
     if ostacolo == 'I':
-        return 999, "I"
+        return 999, "I", ()
 
     if ostacolo == 'V':
         heurCella = manhattan[aCella[0]][aCella[1]]
-        return int(heurCella), "V"
+        return int(heurCella), "V", ()
 
     if ostacolo == 'F':
         heurCella = manhattan[aCella[0]][aCella[1]]
-        return int(heurCella), "PrendiFungo"
+        return int(heurCella), "PrendiFungo", ()
 
     if ostacolo == 'G1' or ostacolo == 'G2':
-        return 0, 'G'
+        return 0, 'G', ()
 
     if ostacolo == 'P':
         cellaAtterraggio = saltoPozzo(daCella, aCella)
@@ -155,10 +181,10 @@ def controlloOstacolo(NP, manhattan, aCella, daCella):
                 if conteggioFunghi > 0:
                     heurCellaAtterraggio = manhattan[cellaAtterraggio[0]][cellaAtterraggio[1]]
                     if ostacoloAtterraggio == 'F':
-                        return int(heurCellaAtterraggio), "UsaPrendiFungo"
-                    return int(heurCellaAtterraggio), "UsaFungo"
-        return 1000, "P"
-    return 1000, "Boh"
+                        return int(heurCellaAtterraggio), "UsaPrendiFungo", cellaAtterraggio
+                    return int(heurCellaAtterraggio), "UsaFungo", cellaAtterraggio
+        return 1000, "P", ()
+    return 1000, "Boh", ()
 
 
 # controlla se le coordinate sono all'interno del labirinto

@@ -1,5 +1,7 @@
+import sys
 import funzioni as f
 import invurgus as i
+sys.setrecursionlimit(1000)
 
 # variabile globale per definire quanti il numero di salti sui pozzi senza fondo
 conteggioFunghi = 0
@@ -11,14 +13,19 @@ def greedySearch(NP, manhattan):
     # bool per goal raggiunto
     finito = False
     catturato = False
+    loopInfinito = False
     daCella = f.trovaMago(NP)
     percorso = [daCella]
     NotaFinale = ""
-    while not finito and not catturato:
+    while not finito and not catturato and not loopInfinito:
         infoMago = spostoMago(NP, manhattan, daCella, percorso)
         daCella = infoMago[0]
         percorso = infoMago[1]
         finito = infoMago[2]
+
+        contoCella = max(percorso.count(x) for x in percorso)
+        if contoCella >= 10:
+            loopInfinito = True
 
         catturato = i.mossaInvurgus(NP)
         ############################################
@@ -31,6 +38,8 @@ def greedySearch(NP, manhattan):
         print("Il Mago ha raggiunto l'uscita!")
     elif catturato:
         print("L'Invurgus ha catturato il Mago!")
+    elif loopInfinito:
+        print("L'Invurgus ha chiuso il Mago, ma continua a scappare!")
     print(NotaFinale)
     print(percorso)
     return percorso
@@ -143,7 +152,11 @@ def sceltaSpostamento(NP, manhattan, daCella, listaOrd):
         lista = sorted(listaOrd, key=lambda x: x[0])
         return sceltaSpostamento(NP, manhattan, daCella, lista)
     else:
-        return listaOrd[0][1], listaOrd[0][2]
+        if listaOrd[0][2] == 'I':
+            print("Il Mago non ha scampo!")
+            return daCella, listaOrd[0][2]
+        else:
+            return listaOrd[0][1], listaOrd[0][2]
 
 
 # restituisce un valore di cella (manhattan o 1000 se ostacolo)
@@ -153,7 +166,7 @@ def sceltaSpostamento(NP, manhattan, daCella, listaOrd):
 # Note possibili: L, I, V, G, P, PrendiFungo, UsaFungo, UsaPrendiFungo
 def controlloOstacolo(NP, manhattan, aCella, daCella):
     global conteggioFunghi
-    print(aCella)
+
     ostacolo = NP[aCella[0], aCella[1]]
     if ostacolo == 'L':
         return 1000, "L", ()
@@ -182,7 +195,10 @@ def controlloOstacolo(NP, manhattan, aCella, daCella):
                     heurCellaAtterraggio = manhattan[cellaAtterraggio[0]][cellaAtterraggio[1]]
                     if ostacoloAtterraggio == 'F':
                         return int(heurCellaAtterraggio), "UsaPrendiFungo", cellaAtterraggio
-                    return int(heurCellaAtterraggio), "UsaFungo", cellaAtterraggio
+                    elif ostacoloAtterraggio == "G1" or ostacoloAtterraggio == "G2":
+                        return int(heurCellaAtterraggio), 'G', cellaAtterraggio
+                    else:
+                        return int(heurCellaAtterraggio), "UsaFungo", cellaAtterraggio
         return 1000, "P", ()
     return 1000, "Boh", ()
 
@@ -214,19 +230,16 @@ def saltoPozzo(saltoDa, pozzo):
     if diffx == 1:
         # direzione = 'N'
         return pozzo[0]-1, pozzo[1]
+    elif diffx == -1:
+        # direzione = 'S'
+        return pozzo[0]+1, pozzo[1]
+    elif diffy == 1:
+        # direzione = 'O'
+        return pozzo[0], pozzo[1]-1
+    elif diffy == -1:
+        # direzione = 'E'
+        return pozzo[0], pozzo[1] + 1
     else:
-        if diffx == -1:
-            # direzione = 'S'
-            return pozzo[0]+1, pozzo[1]
-        else:
-            if diffy == 1:
-                # direzione = 'O'
-                return pozzo[0], pozzo[1]-1
-            else:
-                if diffy == -1:
-                    # direzione = 'E'
-                    return pozzo[0], pozzo[1] + 1
-                else:
-                    # caso in cui salto due pozzi di fila (IMPOSSIBILE)
-                    # forzo il valore di manhattan a 1000
-                    return -1, -1
+        # caso in cui salto due pozzi di fila (IMPOSSIBILE)
+        # forzo il valore di manhattan a 1000
+        return -1, -1

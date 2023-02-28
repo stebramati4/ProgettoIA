@@ -2,7 +2,8 @@ import numpy as np
 import random
 import greedySearch as gs
 
-#crea il labirinto nella situazione iniziale
+
+# crea il labirinto nella situazione iniziale
 # n = numero righe/colonne della matrice quadrata
 # RESTITUISCE: matrice
 def creaLabirinto(n):
@@ -32,28 +33,31 @@ def creaLabirinto(n):
 
     return matrix
 
+
 # crea la matrice manhattan con le distanze di ogni cella del labirinto al goal più vicino
 # NP = matrice con elementi del labirinto
 # RESTITUISCE: matrice manhattan
 def manhattan(NP):
-    manhattan = np.array(NP)
+    MH = np.array(NP)
     G1 = trovayGoal(NP, "G1")
     G2 = trovayGoal(NP, "G2")
 
     for i in range(NP.shape[0]):
         for j in range(NP.shape[1]):
-            manhattan[i][j] = distanzaGoalPiùVicino(G1, G2, i, j)
+            MH[i][j] = distanzaGoalPiuVicino(G1, G2, i, j)
 
-    return manhattan
+    return MH
+
 
 # restituisce l'indice y della prima riga, corrispondente alla posizione del goal
 # NP = matrice elementi del labirinto
 # goal = G1 o G2
 # RESTITUISCE: int (coordinata y)
-def trovayGoal (NP, goal):
+def trovayGoal(NP, goal):
     n = len(NP[0])
 
     firstRow = NP[0]
+    cella = []
 
     for i in range(n):
         if firstRow[i] == goal:
@@ -62,12 +66,10 @@ def trovayGoal (NP, goal):
     return cella
 
 
-
 # trova Mago nel labirinto, restituisce coordinate
 # NP = matrice con elementi del labirinto
 # RESTITUISCE: (x, y)
 def trovaMago(NP):
-    n = len(NP[0])
     cella = (-1, -1)
     for i in range(NP.shape[0]):
         for j in range(NP.shape[1]):
@@ -85,7 +87,7 @@ def trovaMago(NP):
 # NP = matrice con elementi del labirinto
 # RESTITUISCE: (x, y)
 def trovaInvurgus(NP):
-    n = len(NP[0])
+    cella = []
 
     for i in range(NP.shape[0]):
         for j in range(NP.shape[1]):
@@ -94,11 +96,12 @@ def trovaInvurgus(NP):
 
     return cella
 
+
 # ritorna la distanza minima
 # G1 e G2 = coordinate y dei due goal
 # x e y = coordinate cella
 # RESTITUISCE: int
-def distanzaGoalPiùVicino(G1, G2, x, y):
+def distanzaGoalPiuVicino(G1, G2, x, y):
 
     # calcola manhattan dalla cella ai due nodi
     distanzaG1 = distanza(0, G1, x, y)
@@ -114,9 +117,10 @@ def distanzaGoalPiùVicino(G1, G2, x, y):
 # RESTITUISCE: int
 def distanza(x1, y1, x2, y2):
     # distanza = | x(mago) - x(invurgus) | + | y(mago) - y(invurgus) |
-    distanza = abs(x1 - x2) + abs(y1 - y2)
+    dist = abs(x1 - x2) + abs(y1 - y2)
 
-    return distanza
+    return dist
+
 
 # stampa la matrice
 # matrix = matrice con lo stato del labirinto

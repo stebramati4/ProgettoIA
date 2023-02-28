@@ -3,6 +3,7 @@ import funzioni as f
 # variabile globale per definire quanti il numero di salti sui pozzi senza fondo
 conteggioFunghi = 0
 
+
 def greedySearch(NP, manhattan):
     # trovare percorso greedy per arrivare al goal più vicino
 
@@ -10,7 +11,8 @@ def greedySearch(NP, manhattan):
     finito = False
     daCella = f.trovaMago(NP)
     percorso = [daCella]
-    while finito == False:
+    NotaFinale = ""
+    while not finito:
 
         # ripete spostamentoMigliore, mossa e inserimento delle coordinate
         # in array "percorso" finchè non arriva al goal
@@ -19,7 +21,7 @@ def greedySearch(NP, manhattan):
         percorso.append(aCella)
         heur = manhattan[daCella[0]][daCella[1]]
         manhattan[daCella[0]][daCella[1]] = int(heur) + 1
-        ret = mossa(NP,daCella, aCella, Nota)
+        ret = mossa(NP, daCella, aCella, Nota)
         ############################################
         f.stampaMatrice(NP)
         print()
@@ -34,7 +36,6 @@ def greedySearch(NP, manhattan):
     print(percorso)
 
 
-
 # effettua la mossa e aggiorna il labirinto secondo la Nota riportata
 # daCella e aCella sono le coordinate di due celle, da dove a dove salta il Mago
 # (già controllate negli altri costrutti)
@@ -45,13 +46,12 @@ def mossa(NP, daCella, aCella, Nota):
     if NP[daCella[0]][daCella[1]] == 'M':
         NP[daCella[0]][daCella[1]] = 'V'
         if Nota == "PrendiFungo":
-            conteggioFunghi = conteggioFunghi +2
+            conteggioFunghi = conteggioFunghi + 2
         elif Nota == "UsaFungo":
-            conteggioFunghi = conteggioFunghi -1
+            conteggioFunghi = conteggioFunghi - 1
         elif Nota == "UsaPrendiFungo":
-            conteggioFunghi = conteggioFunghi -1 +2
+            conteggioFunghi = conteggioFunghi - 1 + 2
         NP[aCella[0]][aCella[1]] = 'M'
-
 
         if Nota == 'G':
             return NP, True, "Hai Vinto! Hai raggiunto l'uscita più vicina"
@@ -61,7 +61,6 @@ def mossa(NP, daCella, aCella, Nota):
             return NP, False, ""
     else:
         print("Non trovo il mago")
-
 
 
 # coordinate spostamento migliore
@@ -74,25 +73,25 @@ def spostamentoMigliore(NP, manhattan, daCella):
     NotaIniziale = ""
 
     if controlloCella(manhattan, icella - 1, jcella):
-        #NORD
+        # NORD
         valoreCellaN = manhattan[icella-1, jcella]
-        heuristicN = int(valoreCellaN.item())               #converto numpy.str_ in intero
+        heuristicN = int(valoreCellaN.item())               # converto numpy.str_ in intero
         listaPesi.append((heuristicN, (icella-1, jcella), NotaIniziale))
 
     if controlloCella(manhattan, icella, jcella - 1):
-        #OVEST
+        # OVEST
         valoreCellaO = manhattan[icella, jcella - 1]
         heuristicO = int(valoreCellaO.item())
         listaPesi.append((heuristicO, (icella, jcella - 1), NotaIniziale))
 
     if controlloCella(manhattan, icella + 1, jcella):
-        #SUD
+        # SUD
         valoreCellaS = manhattan[icella + 1, jcella]
         heuristicS = int(valoreCellaS.item())
         listaPesi.append((heuristicS, (icella + 1, jcella), NotaIniziale))
 
     if controlloCella(manhattan, icella, jcella + 1):
-        #EST
+        # EST
         valoreCellaE = manhattan[icella, jcella + 1]
         heuristicE = int(valoreCellaE.item())
         listaPesi.append((heuristicE, (icella, jcella + 1), NotaIniziale))
@@ -101,7 +100,6 @@ def spostamentoMigliore(NP, manhattan, daCella):
     print(sorted_list)
 
     return sceltaSpostamento(NP, manhattan, daCella, sorted_list)
-
 
 
 # sceglie lo spostamento migliore tra i 4 elementi presenti in listaPesi
@@ -122,7 +120,6 @@ def sceltaSpostamento(NP, manhattan, daCella, listaOrd):
         return listaOrd[0][1], listaOrd[0][2]
 
 
-
 # restituisce un valore di cella (manhattan o 1000 se ostacolo)
 # aCella contiene le coordinate di una delle quattro direzioni NSOE
 # daCella contiene le coordinate della cella dalla quale salta il personaggio (verso NSOE)
@@ -133,21 +130,21 @@ def controlloOstacolo(NP, manhattan, aCella, daCella):
     print(aCella)
     ostacolo = NP[aCella[0], aCella[1]]
     if ostacolo == 'L':
-        return (1000, "L")
+        return 1000, "L"
 
     if ostacolo == 'I':
-        return (999, "I")
+        return 999, "I"
 
     if ostacolo == 'V':
         heurCella = manhattan[aCella[0]][aCella[1]]
-        return (int(heurCella), "V")
+        return int(heurCella), "V"
 
     if ostacolo == 'F':
         heurCella = manhattan[aCella[0]][aCella[1]]
-        return (int(heurCella), "PrendiFungo")
+        return int(heurCella), "PrendiFungo"
 
     if ostacolo == 'G1' or ostacolo == 'G2':
-        return (0, 'G')
+        return 0, 'G'
 
     if ostacolo == 'P':
         cellaAtterraggio = saltoPozzo(daCella, aCella)
@@ -158,11 +155,10 @@ def controlloOstacolo(NP, manhattan, aCella, daCella):
                 if conteggioFunghi > 0:
                     heurCellaAtterraggio = manhattan[cellaAtterraggio[0]][cellaAtterraggio[1]]
                     if ostacoloAtterraggio == 'F':
-                        return (int(heurCellaAtterraggio), "UsaPrendiFungo")
-                    return (int(heurCellaAtterraggio), "UsaFungo")
-        return (1000, "P")
-    return (1000, "Boh")
-
+                        return int(heurCellaAtterraggio), "UsaPrendiFungo"
+                    return int(heurCellaAtterraggio), "UsaFungo"
+        return 1000, "P"
+    return 1000, "Boh"
 
 
 # controlla se le coordinate sono all'interno del labirinto
@@ -170,8 +166,8 @@ def controlloOstacolo(NP, manhattan, aCella, daCella):
 # RESTITUISCE: True/False
 def controlloCella(NP, icella, jcella):
     n = len(NP[0])
-    if icella >= 0 and icella < n:
-        if jcella >= 0 and jcella < n:
+    if 0 <= icella < n:
+        if 0 <= jcella < n:
             return True
     return False
 
@@ -191,20 +187,20 @@ def saltoPozzo(saltoDa, pozzo):
 
     if diffx == 1:
         # direzione = 'N'
-        return (pozzo[0]-1, pozzo[1])
+        return pozzo[0]-1, pozzo[1]
     else:
         if diffx == -1:
             # direzione = 'S'
-            return (pozzo[0]+1, pozzo[1])
+            return pozzo[0]+1, pozzo[1]
         else:
             if diffy == 1:
-                #direzione = 'O'
-                return (pozzo[0], pozzo[1]-1)
+                # direzione = 'O'
+                return pozzo[0], pozzo[1]-1
             else:
                 if diffy == -1:
                     # direzione = 'E'
-                    return (pozzo[0],pozzo[1]+1)
+                    return pozzo[0], pozzo[1] + 1
                 else:
                     # caso in cui salto due pozzi di fila (IMPOSSIBILE)
                     # forzo il valore di manhattan a 1000
-                    return (-1, -1)
+                    return -1, -1

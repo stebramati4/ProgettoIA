@@ -28,13 +28,13 @@ print(posInv)
 
 
 #############
-#percorso = np.array([])
-#d = np.array([(1, 2)])
-#if len(percorso) == 0:
-    #percorso = dir
-#else:
-    #percorso = np.concatenate(percorso, d)
-#print(percorso)
+# percorso = np.array([])
+# d = np.array([(1, 2)])
+# if len(percorso) == 0:
+# percorso = dir
+# else:
+# percorso = np.concatenate(percorso, d)
+# print(percorso)
 ##############
 
 print(gs.controlloCella(manhattan, 4, 4))
@@ -45,6 +45,6 @@ while not catturato:
     NP = i.mossaInvurgus(NP)
     f.stampaMatrice(NP)
     print()
-    if f.trovaMago(NP) == False:
+    if not f.trovaMago(NP):
         catturato = True
-#gs.greedySearch(NP, manhattan)
+# gs.greedySearch(NP, manhattan)

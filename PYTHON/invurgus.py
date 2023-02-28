@@ -32,7 +32,6 @@ def mossaInvurgus(NP):
     return NP
 
 
-
 # coordinate spostamento migliore
 # RESTITUISCE: (x, y), Nota
 def spostamentoMiglioreInv(NP, daCella):
@@ -40,32 +39,30 @@ def spostamentoMiglioreInv(NP, daCella):
     jcella = daCella[1]
 
     listaPesi = []
-    NotaIniziale = ""
     posMago = f.trovaMago(NP)
     xMago = posMago[0]
     yMago = posMago[1]
 
-
     if g.controlloCella(NP, icella - 1, jcella):
-        #NORD
+        # NORD
         valoreCellaN = f.distanza(icella-1, jcella, xMago, yMago)
-        heuristicN = int(valoreCellaN)               #converto numpy.str_ in intero
-        listaPesi.append((heuristicN, "N",(icella-1, jcella)))
+        heuristicN = int(valoreCellaN)               # converto numpy.str_ in intero
+        listaPesi.append((heuristicN, "N", (icella-1, jcella)))
 
     if g.controlloCella(NP, icella, jcella - 1):
-        #OVEST
+        # OVEST
         valoreCellaO = f.distanza(icella, jcella - 1, xMago, yMago)
         heuristicO = int(valoreCellaO)
         listaPesi.append((heuristicO, "O", (icella, jcella - 1)))
 
     if g.controlloCella(NP, icella + 1, jcella):
-        #SUD
+        # SUD
         valoreCellaS = f.distanza(icella + 1, jcella, xMago, yMago)
         heuristicS = int(valoreCellaS)
         listaPesi.append((heuristicS, "S", (icella + 1, jcella)))
 
     if g.controlloCella(NP, icella, jcella + 1):
-        #EST
+        # EST
         valoreCellaE = f.distanza(icella, jcella + 1, xMago, yMago)
         heuristicE = int(valoreCellaE)
         listaPesi.append((heuristicE, "E", (icella, jcella + 1)))
@@ -84,7 +81,6 @@ def spostamentoMiglioreInv(NP, daCella):
 def sceltaSpostamento(NP, listaOrd, lista):
 
     valore = controlloOstacolo(NP, listaOrd[0][2], int(listaOrd[0][0]))
-    distanza = valore[0]
     nota = valore[1]
     cella = listaOrd[0][2]
 
@@ -94,6 +90,7 @@ def sceltaSpostamento(NP, listaOrd, lista):
     direzione = listaOrd.pop(0)[1]  # coordinate cella
     listaAO = roll(lista, direzione)
 
+    elemLista = []
     listaAO.pop(0)
     trovato = False
     while not trovato:
@@ -109,11 +106,13 @@ def sceltaSpostamento(NP, listaOrd, lista):
     nota = NP[cella[0]][cella[1]]
     return cella, nota
 
+
 def roll(listaAO, direzione):
     while direzione != listaAO[0][1]:
         primoEl = listaAO.pop(0)
         listaAO.append(primoEl)
     return listaAO
+
 
 # restituisce un valore di cella (manhattan o 1000 se ostacolo)
 # aCella contiene le coordinate di una delle quattro direzioni NSOE
@@ -125,23 +124,23 @@ def controlloOstacolo(NP, aCella, distanza):
     print(aCella)
     ostacolo = NP[aCella[0], aCella[1]]
     if ostacolo == 'L':
-        return (1000, "L")
+        return 1000, "L"
 
     if ostacolo == 'M':
-        return (distanza, "M")
+        return distanza, "M"
 
     if ostacolo == 'V':
-        return (distanza, "V")
+        return distanza, "V"
 
     if ostacolo == 'F':
-        return (distanza, "F")
+        return distanza, "F"
 
     if ostacolo == 'G1':
-        return (distanza, 'G1')
+        return distanza, 'G1'
 
     if ostacolo == 'G2':
-        return (distanza, 'G2')
+        return distanza, 'G2'
 
     if ostacolo == 'P':
-        return (1000, "P")
-    return (1000, "Boh")
+        return 1000, "P"
+    return 1000, "Boh"

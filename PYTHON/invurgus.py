@@ -71,14 +71,14 @@ def spostamentoMiglioreInv(NP, daCella):
     sorted_list = sorted(listaPesi, key=lambda x: x[0])
     print(sorted_list)
 
-    return sceltaSpostamento(NP, sorted_list, lista)
+    return sceltaSpostamento(NP, sorted_list, lista, daCella)
 
 
 # sceglie lo spostamento migliore tra i 4 elementi presenti in listaPesi
 # listaPesi = array di liste, gli elementi sono della forma (euristica, (coordinateCella), Nota)
 # RESTITUISCE: (x, y), Nota
 # Note possibili: L, I, V, G, P, PrendiFungo, UsaFungo, UsaPrendiFungo
-def sceltaSpostamento(NP, listaOrd, lista):
+def sceltaSpostamento(NP, listaOrd, lista, daCella):
 
     valore = controlloOstacolo(NP, listaOrd[0][2], int(listaOrd[0][0]))
     nota = valore[1]
@@ -93,17 +93,22 @@ def sceltaSpostamento(NP, listaOrd, lista):
     elemLista = []
     listaAO.pop(0)
     trovato = False
-    while not trovato:
+    bloccato = False
+    while not trovato and not bloccato:
         if not listaAO:
             print("Invurgus bloccato")
+            bloccato = True
         else:
             elemLista = listaAO.pop(0)
             infoOstacolo = controlloOstacolo(NP, elemLista[2], elemLista[0])
             if infoOstacolo[0] != 1000:
                 trovato = True
-
-    cella = elemLista[2]
-    nota = NP[cella[0]][cella[1]]
+    if bloccato:
+        cella = daCella
+        nota = 'V'
+    else:
+        cella = elemLista[2]
+        nota = NP[cella[0]][cella[1]]
     return cella, nota
 
 

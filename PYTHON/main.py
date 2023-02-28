@@ -5,7 +5,7 @@ import greedySearch as gs
 # PREDISPOSIZIONE INIZIALE
 
 # definizione dimensione labirinto
-n = 7
+n = 5
 
 # predisposizione del labirinto
 matrix = f.creaLabirinto(n)

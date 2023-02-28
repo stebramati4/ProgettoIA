@@ -34,10 +34,11 @@ def greedySearch(NP, manhattan):
         f.stampaMatrice(manhattan)
         ############################################
 
-    if finito:
-        print("Il Mago ha raggiunto l'uscita!")
-    elif catturato:
+
+    if catturato:
         print("L'Invurgus ha catturato il Mago!")
+    elif finito:
+        print("Il Mago ha raggiunto l'uscita!")
     elif loopInfinito:
         print("L'Invurgus ha chiuso il Mago, ma continua a scappare!")
     print(NotaFinale)
@@ -83,7 +84,7 @@ def mossa(NP, daCella, aCella, Nota):
             conteggioFunghi = conteggioFunghi - 1 + 2
         NP[aCella[0]][aCella[1]] = 'M'
 
-        if Nota == 'G':
+        if Nota == 'G' or Nota == "GPozzo":
             return NP, True, "Hai Vinto! Hai raggiunto l'uscita più vicina"
         elif Nota == 'I':
             return NP, True, "Hai Perso! L'Invurgus ti ha catturato"
@@ -138,25 +139,24 @@ def spostamentoMigliore(NP, manhattan, daCella):
 # Note possibili: L, I, V, G, P, PrendiFungo, UsaFungo, UsaPrendiFungo
 def sceltaSpostamento(NP, manhattan, daCella, listaOrd):
 
-    if listaOrd[0][2] == "":
+    while listaOrd[0][2] == "":
         valore = controlloOstacolo(NP, manhattan, listaOrd[0][1], daCella)
         heur = valore[0]
         nota = valore[1]
-        if nota == "UsaFungo" or nota == "UsaPrendiFungo":
+        if nota == "UsaFungo" or nota == "UsaPrendiFungo" or nota == "GPozzo":
             cellaPrimoElemento = valore[2]
         else:
             cellaPrimoElemento = listaOrd.pop(0)[1]  # coordinate cella
 
         nuovoElemento = (int(heur), cellaPrimoElemento, valore[1])
         listaOrd.append(nuovoElemento)
-        lista = sorted(listaOrd, key=lambda x: x[0])
-        return sceltaSpostamento(NP, manhattan, daCella, lista)
+        listaOrd = sorted(listaOrd, key=lambda x: x[0])
+
+    if listaOrd[0][2] == 'I':
+        print("Il Mago non ha scampo!")
+        return daCella, listaOrd[0][2]
     else:
-        if listaOrd[0][2] == 'I':
-            print("Il Mago non ha scampo!")
-            return daCella, listaOrd[0][2]
-        else:
-            return listaOrd[0][1], listaOrd[0][2]
+        return listaOrd[0][1], listaOrd[0][2]
 
 
 # restituisce un valore di cella (manhattan o 1000 se ostacolo)
@@ -196,7 +196,7 @@ def controlloOstacolo(NP, manhattan, aCella, daCella):
                     if ostacoloAtterraggio == 'F':
                         return int(heurCellaAtterraggio), "UsaPrendiFungo", cellaAtterraggio
                     elif ostacoloAtterraggio == "G1" or ostacoloAtterraggio == "G2":
-                        return int(heurCellaAtterraggio), 'G', cellaAtterraggio
+                        return int(heurCellaAtterraggio), 'GPozzo', cellaAtterraggio
                     else:
                         return int(heurCellaAtterraggio), "UsaFungo", cellaAtterraggio
         return 1000, "P", ()

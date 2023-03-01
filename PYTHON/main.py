@@ -1,6 +1,7 @@
 import numpy as np
 import funzioni as f
 import greedySearch as gs
+import aStar as a
 
 # PREDISPOSIZIONE INIZIALE
 
@@ -19,6 +20,16 @@ manhattan = f.manhattan(NP)
 print()
 f.stampaMatrice(manhattan)
 
+matriceDistanze = a.matriceDistanza(NP)
+print()
+f.stampaMatrice(manhattan)
+
+
 # GIOCO GREEDY
 percorsoGreedy = gs.greedySearch(NP, manhattan)
 f.stampaMatrice(labirinto)
+
+
+#GIOCO A STAR
+
+

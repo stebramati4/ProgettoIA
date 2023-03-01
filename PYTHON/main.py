@@ -22,14 +22,16 @@ f.stampaMatrice(manhattan)
 
 matriceDistanze = a.matriceDistanza(NP)
 print()
-f.stampaMatrice(manhattan)
+f.stampaMatrice(matriceDistanze)
 
 
 # GIOCO GREEDY
-percorsoGreedy = gs.greedySearch(NP, manhattan)
-f.stampaMatrice(labirinto)
+#percorsoGreedy = gs.greedySearch(NP, manhattan)
+#f.stampaMatrice(labirinto)
 
 
 #GIOCO A STAR
+percorsoAstar = a.aStar(NP, manhattan, matriceDistanze)
+print(percorsoAstar)
 
 

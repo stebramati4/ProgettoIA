@@ -32,6 +32,6 @@ f.stampaMatrice(matriceDistanze)
 
 #GIOCO A STAR
 percorsoAstar = a.aStar(NP, manhattan, matriceDistanze)
-print(percorsoAstar)
+print(percorsoAstar, "percorso")
 
 

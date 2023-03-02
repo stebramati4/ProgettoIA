@@ -12,6 +12,7 @@ def mossaInvurgus(NP):
 
     catturato = False
     daCella = f.trovaInvurgus(NP)
+    print(daCella, "invurgus")
     spostamento = spostamentoMiglioreInv(NP, daCella)
     aCella = spostamento[0]
     Nota = spostamento[1]
@@ -37,11 +38,14 @@ def mossaInvurgus(NP):
 def spostamentoMiglioreInv(NP, daCella):
     icella = daCella[0]
     jcella = daCella[1]
+    xMago = -1
+    yMago = -1
 
     listaPesi = []
     posMago = f.trovaMago(NP)
-    xMago = posMago[0]
-    yMago = posMago[1]
+    if posMago != False:
+        xMago = posMago[0]
+        yMago = posMago[1]
 
     if g.controlloCella(NP, icella - 1, jcella):
         # NORD

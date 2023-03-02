@@ -1,6 +1,7 @@
 import funzioni as f
 import numpy as np
 import greedySearch as gs
+import invurgus as i
 import heapq
 
 # variabile globale per definire quanti il numero di salti sui pozzi senza fondo
@@ -51,24 +52,40 @@ def aStar(NP, manhattan, matriceDistanze):
                 f_score[vicino] = int(tentative_g_score) + int(euristica_fn(manhattan, vicino))
                 print(f_score , "f_score")
 
-                ostacolo = controlloOstacolo(NP, current_node, vicino)
+                ostacolo = controlloOstacolo(NP, vicino)
                 print(ostacolo)
 
                 if ostacolo == 'V' or ostacolo == 'F' or ostacolo == 'G1' or ostacolo == 'G2':
                     print('if controllo ostacolo')
                     came_from[vicino] = current_node
+                    print(f_score[vicino], vicino, ostacolo)
                     heapq.heappush(open_list, (f_score[vicino], vicino, ostacolo))
                 elif ostacolo == 'P':
                     print('elif controllo ostacolo pozzo')
                     if conteggioFunghi > 0:
+                        print(conteggioFunghi)
                         print('if conteggio funghi')
                         cellaAtterraggio = controlloDopoPozzo(NP, current_node, vicino)
                         if cellaAtterraggio is not None:
                             print('if cella atterraggio none')
+                            print(cellaAtterraggio)
+
+                            g_scoreCellaAtt, f_scoreCellaAtt = calcoloCosti(matriceDistanze, manhattan, g_score[current_node], current_node, cellaAtterraggio)
+
+                            g_score[cellaAtterraggio] = g_scoreCellaAtt
+                            f_score[cellaAtterraggio] = f_scoreCellaAtt
+
                             came_from[cellaAtterraggio] = current_node
+                            print(f_scoreCellaAtt)
+                            print(cellaAtterraggio)
+                            print(ostacolo)
                             heapq.heappush(open_list, (f_score[cellaAtterraggio], cellaAtterraggio, ostacolo))
                         else:
                             print("Non c'è una cella dopo il pozzo")
+
+        catturato = i.mossaInvurgus(NP)
+        if catturato:
+            print("L'Invurgus ha catturato il Mago!")
 
     return None
 
@@ -82,7 +99,14 @@ def dist_between(MD, cella, vicino):
     return distanza
 
 
-def controlloOstacolo(NP, daCella, aCella):
+def calcoloCosti(MD, MN, g_scoreDaCella, daCella, aCella):
+    tentative_g_score = g_scoreDaCella + dist_between(MD, daCella, aCella)
+    g_scoreACella = int(tentative_g_score)
+    f_scoreACella = int(tentative_g_score) + int(euristica_fn(MN, aCella))
+
+    return g_scoreACella, f_scoreACella
+
+def controlloOstacolo(NP, aCella):
     global conteggioFunghi
 
     ostacolo = NP[aCella[0], aCella[1]]

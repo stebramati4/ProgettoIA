@@ -73,7 +73,7 @@ def spostamentoMiglioreInv(NP, daCella):
 
     lista = listaPesi
     sorted_list = sorted(listaPesi, key=lambda x: x[0])
-    print(sorted_list)
+    #print(sorted_list)
 
     return sceltaSpostamento(NP, sorted_list, lista, daCella)
 
@@ -130,7 +130,7 @@ def roll(listaAO, direzione):
 # Note possibili: L, I, V, G, P, PrendiFungo, UsaFungo, UsaPrendiFungo
 def controlloOstacolo(NP, aCella, distanza):
 
-    print(aCella)
+    #print(aCella)
     ostacolo = NP[aCella[0], aCella[1]]
     if ostacolo == 'L':
         return 1000, "L"

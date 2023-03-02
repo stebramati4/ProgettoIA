@@ -13,6 +13,9 @@ def aStar(NP, manhattan, matriceDistanze):
     G1 = (0, f.trovayGoal(NP, "G1"))
     G2 = (0, f.trovayGoal(NP, "G2"))
 
+    finito = False
+    catturato = False
+
     open_list = []
 
     heapq.heappush(open_list, (0, start, ostacolo))
@@ -21,54 +24,56 @@ def aStar(NP, manhattan, matriceDistanze):
     f_score = {start: euristica_fn(manhattan, start)}
     came_from = {start: None}
 
-    while open_list:
-        print(open_list, 'open_list')
+    while open_list and not finito and not catturato:
+        #print(open_list, 'open_list')
         current_cost, current_node, ostacolo = heapq.heappop(open_list)
 
         if current_node == G1 or current_node == G2:
-            print('start = a uno dei goal')
+            #print('start = a uno dei goal')
             percorso = []
             while current_node != start:
-                print('while del if dove start = a uno dei goal')
+                #print('while del if dove start = a uno dei goal')
                 percorso.append(current_node)
                 current_node = came_from[current_node]
             percorso.append(start)
             percorso.reverse()
+            print("Il mago ha trovato l'uscita")
             return percorso
 
         for vicino in vicini_fn(manhattan, current_node):
-            print('ciclo i vicini')
-            print(vicino)
+            #print('ciclo i vicini')
+            #print(vicino)
             tentative_g_score = g_score[current_node] + dist_between(matriceDistanze, current_node, vicino)
 
-            print(g_score[current_node], 'g_score')
-            print(dist_between(matriceDistanze, current_node, vicino), 'distanza tra celle')
-            print(tentative_g_score, 'tentative_g_score')
+            #print(g_score[current_node], 'g_score')
+            #print(dist_between(matriceDistanze, current_node, vicino), 'distanza tra celle')
+            #print(tentative_g_score, 'tentative_g_score')
 
             if vicino not in g_score or tentative_g_score < g_score[vicino]:
-                print('if dei vicini')
+                #print('if dei vicini')
                 g_score[vicino] = int(tentative_g_score)
-                print(g_score , "g_score")
+                #print(g_score, "g_score")
                 f_score[vicino] = int(tentative_g_score) + int(euristica_fn(manhattan, vicino))
-                print(f_score , "f_score")
+                #print(f_score, "f_score")
 
                 ostacolo = controlloOstacolo(NP, vicino)
-                print(ostacolo)
+                #print(ostacolo)
 
                 if ostacolo == 'V' or ostacolo == 'F' or ostacolo == 'G1' or ostacolo == 'G2':
-                    print('if controllo ostacolo')
+                    #print('if controllo ostacolo')
                     came_from[vicino] = current_node
-                    print(f_score[vicino], vicino, ostacolo)
+                    #print(came_from[vicino], vicino, "came_from[current_node]")
+                    #print(f_score[vicino], vicino, ostacolo)
                     heapq.heappush(open_list, (f_score[vicino], vicino, ostacolo))
                 elif ostacolo == 'P':
-                    print('elif controllo ostacolo pozzo')
+                    #print('elif controllo ostacolo pozzo')
                     if conteggioFunghi > 0:
-                        print(conteggioFunghi)
-                        print('if conteggio funghi')
+                        #print(conteggioFunghi)
+                        #print('if conteggio funghi')
                         cellaAtterraggio = controlloDopoPozzo(NP, current_node, vicino)
                         if cellaAtterraggio is not None:
-                            print('if cella atterraggio none')
-                            print(cellaAtterraggio)
+                            #print('if cella atterraggio none')
+                            #print(cellaAtterraggio)
 
                             g_scoreCellaAtt, f_scoreCellaAtt = calcoloCosti(matriceDistanze, manhattan, g_score[current_node], current_node, cellaAtterraggio)
 
@@ -76,19 +81,43 @@ def aStar(NP, manhattan, matriceDistanze):
                             f_score[cellaAtterraggio] = f_scoreCellaAtt
 
                             came_from[cellaAtterraggio] = current_node
-                            print(f_scoreCellaAtt)
-                            print(cellaAtterraggio)
-                            print(ostacolo)
+                            #print(came_from[cellaAtterraggio], "came_from[cellaAtterraggio]")
+                            #print(f_scoreCellaAtt)
+                            #print(cellaAtterraggio)
+                            #print(ostacolo)
                             heapq.heappush(open_list, (f_score[cellaAtterraggio], cellaAtterraggio, ostacolo))
                         else:
                             print("Non c'è una cella dopo il pozzo")
 
+        elementoMigliore = heapq.heappop(open_list)
+        heapq.heappop(open_list)
+        heapq.heappush(open_list, elementoMigliore)
+
+        cellaMigliore = elementoMigliore[1]
+
+        print(current_node)
+        print(cellaMigliore, "primo elemento dello heap")
+
+        mossaMago(NP, current_node, cellaMigliore)
+
+        print(open_list)
+
         catturato = i.mossaInvurgus(NP)
-        if catturato:
-            print("L'Invurgus ha catturato il Mago!")
+
+        print()
+        f.stampaMatrice(NP)
+        print()
 
     return None
 
+
+def mossaMago(NP, daCella, aCella):
+    print(daCella, 'cella mossaMago')
+    if NP[daCella[0]][daCella[1]] == 'M':
+        NP[daCella[0]][daCella[1]] = 'V'
+        NP[aCella[0]][aCella[1]] = 'M'
+    else:
+        return False
 
 def dist_between(MD, cella, vicino):
     distanzaCella = int(MD[cella[0]][cella[1]])

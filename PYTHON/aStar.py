@@ -38,7 +38,7 @@ def aStar(NP, manhattan, matriceDistanze):
             print("Il mago ha trovato l'uscita")
             return percorso
 
-        for vicino in vicini_fn(manhattan, current_node):
+        for vicino in vicini_fn(NP, current_node):
             if gs.controlloCella(NP, vicino[0], vicino[1]):
                 print("Controllo vicino ", vicino, " del current_node ", current_node)
                 tentative_g_score = g_score[current_node] + dist_between(matriceDistanze, current_node, vicino)
@@ -67,9 +67,16 @@ def aStar(NP, manhattan, matriceDistanze):
                         else:
                             print("Non c'è una cella dopo il pozzo")
         if heapq:
+            print(open_list)
             elementoMigliore = heapq.heappop(open_list)
-            # heapq.heappop(open_list)
+            print(elementoMigliore, "elemento migliore")
+            print(open_list)
+            while open_list:
+                heapq.heappop(open_list)
             heapq.heappush(open_list, elementoMigliore)
+            print(open_list, "con elemento")
+            #heapq._siftdown(open_list, 0, len(open_list) - 1)
+            #print(open_list, "ordinata")
 
             cellaMigliore = elementoMigliore[1]
 
@@ -171,28 +178,28 @@ def spostamentoMigliore(open_list):
         return spostamentoMigliore(new_heap)
 
 
-def vicini_fn(manhattan, cella):
+def vicini_fn(NP, cella):
     icella = cella[0]
     jcella = cella[1]
 
     vicini = []
 
-    if gs.controlloCella(manhattan, icella - 1, jcella):
+    if gs.controlloCella(NP, icella - 1, jcella):
         # NORD
         cella = (icella - 1, jcella)
         vicini.append(cella)
 
-    if gs.controlloCella(manhattan, icella, jcella - 1):
+    if gs.controlloCella(NP, icella, jcella - 1):
         # OVEST
         cella = (icella, jcella - 1)
         vicini.append(cella)
 
-    if gs.controlloCella(manhattan, icella + 1, jcella):
+    if gs.controlloCella(NP, icella + 1, jcella):
         # SUD
         cella = (icella + 1, jcella)
         vicini.append(cella)
 
-    if gs.controlloCella(manhattan, icella, jcella + 1):
+    if gs.controlloCella(NP, icella, jcella + 1):
         # EST
         cella = (icella, jcella + 1)
         vicini.append(cella)

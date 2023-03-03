@@ -12,7 +12,6 @@ def mossaInvurgus(NP):
 
     catturato = False
     daCella = f.trovaInvurgus(NP)
-    print(daCella, "invurgus")
     spostamento = spostamentoMiglioreInv(NP, daCella)
     aCella = spostamento[0]
     Nota = spostamento[1]
@@ -27,6 +26,7 @@ def mossaInvurgus(NP):
     elif Nota == 'M':
         InvPrecedente = 'M'
         print("L'Invurgus ha catturato il mago!")
+        print()
         catturato = True
     else:
         InvPrecedente = Nota
@@ -101,6 +101,7 @@ def sceltaSpostamento(NP, listaOrd, lista, daCella):
     while not trovato and not bloccato:
         if not listaAO:
             print("Invurgus bloccato")
+            print()
             bloccato = True
         else:
             elemLista = listaAO.pop(0)

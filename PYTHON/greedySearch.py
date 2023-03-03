@@ -17,6 +17,7 @@ def greedySearch(NP, manhattan):
     daCella = f.trovaMago(NP)
     percorso = [daCella]
     NotaFinale = ""
+    passo = 1
     while not finito and not catturato and not loopInfinito:
         infoMago = spostoMago(NP, manhattan, daCella, percorso)
         daCella = infoMago[0]
@@ -28,22 +29,34 @@ def greedySearch(NP, manhattan):
             loopInfinito = True
 
         catturato = i.mossaInvurgus(NP)
+
+        print("------- Passo ", passo, " ----------")
+        print()
         ############################################
         f.stampaMatrice(NP)
         print()
         f.stampaMatrice(manhattan)
+        print()
         ############################################
-
+        passo = passo + 1
 
     if catturato:
         print("L'Invurgus ha catturato il Mago!")
+        print()
     elif finito:
         print("Il Mago ha raggiunto l'uscita!")
+        print()
     elif loopInfinito:
         print("L'Invurgus ha chiuso il Mago, ma continua a scappare!")
+        print()
+
     print(NotaFinale)
+    print()
+    print("Il percorso effettuato dal mago è: ")
     print(percorso)
+    print()
     return percorso
+
 
 # spostamento integrale del mago
 #RESTITUISCE: (x, y) (daCella), array (percorso), bool(finito)
@@ -92,6 +105,7 @@ def mossa(NP, daCella, aCella, Nota):
             return NP, False, ""
     else:
         print("Non trovo il mago")
+        print()
 
 
 # coordinate spostamento migliore
@@ -128,7 +142,6 @@ def spostamentoMigliore(NP, manhattan, daCella):
         listaPesi.append((heuristicE, (icella, jcella + 1), NotaIniziale))
 
     sorted_list = sorted(listaPesi, key=lambda x: x[0])
-    print(sorted_list)
 
     return sceltaSpostamento(NP, manhattan, daCella, sorted_list)
 
@@ -154,6 +167,7 @@ def sceltaSpostamento(NP, manhattan, daCella, listaOrd):
 
     if listaOrd[0][2] == 'I':
         print("Il Mago non ha scampo!")
+        print()
         return daCella, listaOrd[0][2]
     else:
         return listaOrd[0][1], listaOrd[0][2]

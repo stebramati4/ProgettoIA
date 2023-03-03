@@ -80,6 +80,7 @@ def trovaMago(NP):
         return cella
     else:
         print("Il mago non c'è")
+        print()
         return False
 
 

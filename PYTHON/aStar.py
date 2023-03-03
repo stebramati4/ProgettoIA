@@ -25,6 +25,8 @@ def aStar(NP, manhattan, matriceDistanze):
     f_score = {start: euristica_fn(manhattan, start)}
     came_from = {start: None}
 
+    passo = 1
+
     while open_list and not finito and not catturato:
         current_cost, current_node, ostacolo = heapq.heappop(open_list)
 
@@ -36,11 +38,11 @@ def aStar(NP, manhattan, matriceDistanze):
             percorso.append(start)
             percorso.reverse()
             print("Il mago ha trovato l'uscita")
+            print()
             return percorso
 
         for vicino in vicini_fn(NP, current_node):
             if gs.controlloCella(NP, vicino[0], vicino[1]):
-                print("Controllo vicino ", vicino, " del current_node ", current_node)
                 tentative_g_score = g_score[current_node] + dist_between(matriceDistanze, current_node, vicino)
 
             if vicino not in g_score or tentative_g_score < g_score[vicino]:
@@ -64,40 +66,30 @@ def aStar(NP, manhattan, matriceDistanze):
 
                             came_from[cellaAtterraggio] = current_node
                             heapq.heappush(open_list, (f_score[cellaAtterraggio], cellaAtterraggio, ostacolo))
-                        else:
-                            print("Non c'è una cella dopo il pozzo")
+
         if heapq:
-            print(open_list)
             elementoMigliore = heapq.heappop(open_list)
-            print(elementoMigliore, "elemento migliore")
-            print(open_list)
+
             while open_list:
                 heapq.heappop(open_list)
             heapq.heappush(open_list, elementoMigliore)
-            print(open_list, "con elemento")
-            #heapq._siftdown(open_list, 0, len(open_list) - 1)
-            #print(open_list, "ordinata")
 
             cellaMigliore = elementoMigliore[1]
 
-            print(current_node)
-            print(cellaMigliore, "primo elemento dello heap")
-
             mossaMago(NP, current_node, cellaMigliore)
-
-        print(open_list)
 
         catturato = i.mossaInvurgus(NP)
 
+        print("------- Passo ", passo, " ----------")
         print()
         f.stampaMatrice(NP)
         print()
+        passo = passo + 1
 
     return None
 
 
 def mossaMago(NP, daCella, aCella):
-    print(daCella, 'cella mossaMago')
     if NP[daCella[0]][daCella[1]] == 'M':
         NP[daCella[0]][daCella[1]] = 'V'
         NP[aCella[0]][aCella[1]] = 'M'

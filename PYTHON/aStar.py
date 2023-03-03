@@ -7,6 +7,7 @@ import heapq
 # variabile globale per definire quanti il numero di salti sui pozzi senza fondo
 conteggioFunghi = 0
 
+
 def aStar(NP, manhattan, matriceDistanze):
     start = f.trovaMago(NP)
     ostacolo = NP[start]
@@ -25,14 +26,11 @@ def aStar(NP, manhattan, matriceDistanze):
     came_from = {start: None}
 
     while open_list and not finito and not catturato:
-        #print(open_list, 'open_list')
         current_cost, current_node, ostacolo = heapq.heappop(open_list)
 
         if current_node == G1 or current_node == G2:
-            #print('start = a uno dei goal')
             percorso = []
             while current_node != start:
-                #print('while del if dove start = a uno dei goal')
                 percorso.append(current_node)
                 current_node = came_from[current_node]
             percorso.append(start)
@@ -41,39 +39,23 @@ def aStar(NP, manhattan, matriceDistanze):
             return percorso
 
         for vicino in vicini_fn(manhattan, current_node):
-            #print('ciclo i vicini')
-            #print(vicino)
-            tentative_g_score = g_score[current_node] + dist_between(matriceDistanze, current_node, vicino)
-
-            #print(g_score[current_node], 'g_score')
-            #print(dist_between(matriceDistanze, current_node, vicino), 'distanza tra celle')
-            #print(tentative_g_score, 'tentative_g_score')
+            if gs.controlloCella(NP, vicino[0], vicino[1]):
+                print("Controllo vicino ", vicino, " del current_node ", current_node)
+                tentative_g_score = g_score[current_node] + dist_between(matriceDistanze, current_node, vicino)
 
             if vicino not in g_score or tentative_g_score < g_score[vicino]:
-                #print('if dei vicini')
                 g_score[vicino] = int(tentative_g_score)
-                #print(g_score, "g_score")
                 f_score[vicino] = int(tentative_g_score) + int(euristica_fn(manhattan, vicino))
-                #print(f_score, "f_score")
 
                 ostacolo = controlloOstacolo(NP, vicino)
-                #print(ostacolo)
 
                 if ostacolo == 'V' or ostacolo == 'F' or ostacolo == 'G1' or ostacolo == 'G2':
-                    #print('if controllo ostacolo')
                     came_from[vicino] = current_node
-                    #print(came_from[vicino], vicino, "came_from[current_node]")
-                    #print(f_score[vicino], vicino, ostacolo)
                     heapq.heappush(open_list, (f_score[vicino], vicino, ostacolo))
                 elif ostacolo == 'P':
-                    #print('elif controllo ostacolo pozzo')
                     if conteggioFunghi > 0:
-                        #print(conteggioFunghi)
-                        #print('if conteggio funghi')
                         cellaAtterraggio = controlloDopoPozzo(NP, current_node, vicino)
                         if cellaAtterraggio is not None:
-                            #print('if cella atterraggio none')
-                            #print(cellaAtterraggio)
 
                             g_scoreCellaAtt, f_scoreCellaAtt = calcoloCosti(matriceDistanze, manhattan, g_score[current_node], current_node, cellaAtterraggio)
 
@@ -81,24 +63,20 @@ def aStar(NP, manhattan, matriceDistanze):
                             f_score[cellaAtterraggio] = f_scoreCellaAtt
 
                             came_from[cellaAtterraggio] = current_node
-                            #print(came_from[cellaAtterraggio], "came_from[cellaAtterraggio]")
-                            #print(f_scoreCellaAtt)
-                            #print(cellaAtterraggio)
-                            #print(ostacolo)
                             heapq.heappush(open_list, (f_score[cellaAtterraggio], cellaAtterraggio, ostacolo))
                         else:
                             print("Non c'è una cella dopo il pozzo")
+        if heapq:
+            elementoMigliore = heapq.heappop(open_list)
+            # heapq.heappop(open_list)
+            heapq.heappush(open_list, elementoMigliore)
 
-        elementoMigliore = heapq.heappop(open_list)
-        heapq.heappop(open_list)
-        heapq.heappush(open_list, elementoMigliore)
+            cellaMigliore = elementoMigliore[1]
 
-        cellaMigliore = elementoMigliore[1]
+            print(current_node)
+            print(cellaMigliore, "primo elemento dello heap")
 
-        print(current_node)
-        print(cellaMigliore, "primo elemento dello heap")
-
-        mossaMago(NP, current_node, cellaMigliore)
+            mossaMago(NP, current_node, cellaMigliore)
 
         print(open_list)
 

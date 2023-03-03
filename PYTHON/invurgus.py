@@ -109,7 +109,7 @@ def sceltaSpostamento(NP, listaOrd, lista, daCella):
                 trovato = True
     if bloccato:
         cella = daCella
-        nota = 'V'
+        nota = 'I'
     else:
         cella = elemLista[2]
         nota = NP[cella[0]][cella[1]]

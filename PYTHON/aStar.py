@@ -89,6 +89,7 @@ def aStar(NP, manhattan, matriceDistanze):
     return None
 
 
+#Funzione che aggiorna la posizione del Mago
 def mossaMago(NP, daCella, aCella):
     if NP[daCella[0]][daCella[1]] == 'M':
         NP[daCella[0]][daCella[1]] = 'V'
@@ -96,6 +97,8 @@ def mossaMago(NP, daCella, aCella):
     else:
         return False
 
+#Funzione che calcola la distanza tra 2 celle
+#Restituisce il valore della distanza calcolata
 def dist_between(MD, cella, vicino):
     distanzaCella = int(MD[cella[0]][cella[1]])
     distanzaVicino = int(MD[vicino[0]][vicino[1]])
@@ -104,7 +107,8 @@ def dist_between(MD, cella, vicino):
 
     return distanza
 
-
+#Funzione calcola il g_score e l'f_score
+#Restituisce i valori calcolati di g_scoreACella e f_scoreACella
 def calcoloCosti(MD, MN, g_scoreDaCella, daCella, aCella):
     tentative_g_score = g_scoreDaCella + dist_between(MD, daCella, aCella)
     g_scoreACella = int(tentative_g_score)
@@ -112,6 +116,9 @@ def calcoloCosti(MD, MN, g_scoreDaCella, daCella, aCella):
 
     return g_scoreACella, f_scoreACella
 
+
+#Data la cella la funzione andrà a verificate cosa è contenuto in quella cella
+#Restituisce la nota che rappresenta l'ostacolo
 def controlloOstacolo(NP, aCella):
     global conteggioFunghi
 
@@ -139,6 +146,8 @@ def controlloOstacolo(NP, aCella):
         return "P"
 
 
+#Controllo la cella dopo il pozzo
+#Restituisce la cella dove deve atterrare il mago dopo il salto del pozzo
 def controlloDopoPozzo(NP, daCella, aCella):
     global conteggioFunghi
     cellaAtterraggio = gs.saltoPozzo(daCella, aCella)
@@ -170,6 +179,7 @@ def spostamentoMigliore(open_list):
         return spostamentoMigliore(new_heap)
 
 
+#crea una lista contenente le celle vicine alla cella le gli passo
 def vicini_fn(NP, cella):
     icella = cella[0]
     jcella = cella[1]
@@ -199,11 +209,13 @@ def vicini_fn(NP, cella):
     return vicini
 
 
+#Restituisce l'euristica della cella
 def euristica_fn(manhattan, cella):
     heuristic = manhattan[cella[0]][cella[1]]
     return heuristic
 
 
+#Crea la matrice contenente le distanze
 def matriceDistanza(NP):
     MD = np.array(NP)
     start = f.trovaMago(NP)
